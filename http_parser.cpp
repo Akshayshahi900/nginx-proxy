@@ -2,14 +2,8 @@
 #include<string>
 #include<unordered_map>
 #include<sstream>
-struct HttpRequest{
-  std::string method;
-  std::string path;
-  std::string version;
+#include "request.h"
 
-  std::unordered_map<std::string , std::string>headers;
-
-};
 
 HttpRequest parseRequest(const std::string &raw){
   HttpRequest req;
@@ -55,7 +49,7 @@ HttpRequest parseRequest(const std::string &raw){
   }
   return req;
 }
-
+/*
 int main(){
   std::string raw = "GET /hello HTTP/1.1\r\n"
                     "Host: localhost\r\n"
@@ -73,4 +67,4 @@ int main(){
     std::cout << k << " => " << v << '\n';
   }
 
-}
+} */
