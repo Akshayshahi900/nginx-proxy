@@ -42,7 +42,7 @@ int main(){
   }
 
   std::cout << "Server listening on port 8080\n";
-
+  while(true){
   //accept
   int client_fd = accept(server_fd, nullptr , nullptr);
 
@@ -92,8 +92,9 @@ int main(){
     std::cout << s ;
   }
   std::cout << "\n\n\nThe request data ends\n\n\n";
-
+  
   close(client_fd);
+  } 
   close(server_fd);
   return 0;
 }
