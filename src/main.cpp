@@ -92,7 +92,21 @@ int main(){
     std::cout << s ;
   }
   std::cout << "\n\n\nThe request data ends\n\n\n";
+ 
+  //TODO Make a better response and calculate length of response body without hardcoding
+  std::string response = "HTTP/1.1 200 OK\r\n"
+                  "Content-Length: 2\r\n"
+                  "\r\n"
+                  "OK\n";
+
+  int bytes_send = send(client_fd , response.c_str() , response.size() , 0);
   
+  if(bytes_send == -1){
+    perror("send");
+  }
+
+
+      
   close(client_fd);
   } 
   close(server_fd);
