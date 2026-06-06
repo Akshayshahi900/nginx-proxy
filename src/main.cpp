@@ -126,14 +126,13 @@ int main(){
         }
 
         //instead of printing the req request i have to forward it to the loadbalancer right
-       load_balancer(req);
+        std::string backend = load_balancer(req);
+        
+        std::string response = proxy(raw , backend);
+        
 
-
-      //TODO Make a better response and calculate length of response body without hardcoding
-        conn.write_buffer = "HTTP/1.1 200 OK\r\n"
-                  "Content-Length: 2\r\n"
-                  "\r\n"
-                  "OK\n";
+        // client send response back      
+        conn.write_buffer = response;
 
         int bytes_send = send(conn.fd , conn.write_buffer.data() ,conn.write_buffer.size() , 0);
   
