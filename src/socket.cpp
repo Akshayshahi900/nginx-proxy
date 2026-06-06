@@ -2,9 +2,11 @@
 #include<unistd.h>
 #include<sys/socket.h>
 #include<netinet/in.h>
-
-
-int create_tcp_connection(int port){
+#include<arpa/inet.h>
+#include <cstdint>
+#include <fcntl.h>
+#include "socket.h"
+int create_server_socket(int port){
   int server_fd = socket(AF_INET , SOCK_STREAM , 0);
 
   if(server_fd < 0){
@@ -20,7 +22,7 @@ int create_tcp_connection(int port){
   int opt = 1;
   setsockopt(server_fd , SOL_SOCKET , SO_REUSEADDR , &opt , sizeof(opt));
 
-  if(bind(server_fd , (sockaddr*)&server_addr , sizeof(server)) < 0){
+  if(bind(server_fd , (sockaddr*)&server_addr , sizeof(server_addr)) < 0){
     perror("bind");
     return -1;
   }
@@ -49,4 +51,31 @@ void make_non_blocking(int fd ){
     perror("fcntl F_SETFL");
     exit(1);
   }
+}
+
+
+int connect_to_backend(const std::string &host , uint16_t port){
+  int fd = socket(AF_INET , SOCK_STREAM , 0);
+
+  if(fd < 0){
+    perror("socket");
+    return -1;
+  }
+
+  sockaddr_in addr{};
+  addr.sin_family = AF_INET;
+  addr.sin_port = htons(port);
+  
+  if(inet_pton(AF_INET , host.c_str() , &addr.sin_addr) <= 0){
+    perror("inet_pton");
+    close(fd);
+    return -1;
+  }
+
+if(connect(fd , (sockaddr*)&addr , sizeof(addr)) < 0){
+  perror("connect");
+  close(fd);
+  return -1;
+}
+return fd;
 }

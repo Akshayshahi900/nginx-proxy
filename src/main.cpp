@@ -6,11 +6,16 @@
 #include<fcntl.h>
 #include<cstring>
 #include<vector>
+#include<cstdint>
+#include<unordered_map>
+
 
 #include "parser.h"
 #include "request.h"
-#include <unordered_map>
 #include "socket.h"
+#include "load_balancer.h"
+#include "proxy.h"
+
 #define MAX_EVENTS 64
 #define BUFFER_SIZE 1024
 
@@ -26,7 +31,7 @@ std::unordered_map<int , Connection> connections;
 
 
 int main(){
-  int server_fd = create_tcp_connection(8080);
+  int server_fd = create_server_socket(8080);
   
   if(server_fd == -1){
     perror("Create Socket");
@@ -126,7 +131,7 @@ int main(){
         }
 
         //instead of printing the req request i have to forward it to the loadbalancer right
-        std::string backend = load_balancer(req);
+        uint16_t backend = load_balancer(req);
         
         std::string response = proxy(raw , backend);
         

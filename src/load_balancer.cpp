@@ -1,9 +1,8 @@
-#pragma once
 #include <iostream>
-
+#include <cstdint>
 #include "request.h"
-std::string load_balancer(HttpRequest req){
-
-  string PORT = "3000";
-  return PORT;
+uint16_t load_balancer(HttpRequest req){
+  
+  uint16_t port= 3000;
+  return port;
 }

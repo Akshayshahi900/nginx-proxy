@@ -1,4 +1,8 @@
-#include <iostream>
+#pragma once
 
+#include <iostream>
 #include "request.h"
-void load_balancer(HttpRequest req);
+#include <cstdint>
+
+
+uint16_t load_balancer(HttpRequest req);
