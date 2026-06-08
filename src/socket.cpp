@@ -61,6 +61,9 @@ int connect_to_backend(const std::string &host , uint16_t port){
     perror("socket");
     return -1;
   }
+  
+  make_non_blocking(fd);
+
 
   sockaddr_in addr{};
   addr.sin_family = AF_INET;
@@ -72,10 +75,13 @@ int connect_to_backend(const std::string &host , uint16_t port){
     return -1;
   }
 
-if(connect(fd , (sockaddr*)&addr , sizeof(addr)) < 0){
-  perror("connect");
-  close(fd);
-  return -1;
-}
-return fd;
+  int ret = connect(fd , (sockaddr*)&addr , sizeof(addr));
+
+
+  if(ret < 0 && errno != EINPROGRESS){
+    perror("connect");
+    close(fd);
+    return -1;
+  }
+  return fd;
 }
